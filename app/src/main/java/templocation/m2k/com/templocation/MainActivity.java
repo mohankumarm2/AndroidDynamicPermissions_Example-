@@ -39,15 +39,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(MainActivity.this, "Location: " + mLocation, Toast.LENGTH_LONG).show();
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+//        Toast.makeText(MainActivity.this, "Location: " + mLocation, Toast.LENGTH_LONG).show();
+//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
+        //Check permission on application launch
         if (checkPermission())
-            getLocation();
-
+//            getLocation();
+            return;
         else
-            showMessageOKCancel("Please Grant the Permissions",
+            showMessageOKCancel("Please Grant the Permissions", //shows dialog that permission has be granted
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -56,32 +56,50 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
+        //Registering XML Views to local variables
         mGetLocation_Button = findViewById(R.id.mainActivity_getlocation_button);
         mCheckPermission_Button = findViewById(R.id.mainActivity_checkPermission_button);
         mRequestPermission_Button = findViewById(R.id.mainActivity_requestPermission_button);
 
+        //Registering Click Listener
         mGetLocation_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!mLocation.equals("location not set"))
                     Toast.makeText(MainActivity.this, "Location: " + mLocation, Toast.LENGTH_LONG).show();
-                else
-                    getLocation();
+//                else
+//                    getLocation();
+            }
+        });
+
+        //Registering Click Listener
+        mCheckPermission_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermission();                  //user defined method to check the permission
+            }
+        });
+
+        //Registering Click Listener
+        mRequestPermission_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermission();                //user defined method to invoke the Permission Dialog
             }
         });
 
     }
 
-    private void getLocation() {
-        mFusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        mLocation = location != null ? location.toString() : "location not set";
-
-                    }
-                });
-    }
+//    private void getLocation() {
+//        mFusedLocationProviderClient.getLastLocation()
+//                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//                    @Override
+//                    public void onSuccess(Location location) {
+//                        mLocation = location != null ? location.toString() : "location not set";
+//
+//                    }
+//                });
+//    }
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -105,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 if (locationAccepted) {
                     Toast.makeText(MainActivity.this, "Permission Granted!!!", Toast.LENGTH_LONG).show();
-                    getLocation();
+//                    getLocation();
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
